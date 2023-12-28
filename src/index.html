@@ -14,19 +14,17 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <div class="search-container"></div>
-    <form class="search-form">
-      <input
-        class="search-input"
-        type="text"
-        placeholder="Search images..."
-        name="searchInput"
-      />
-      <button class="search-button" type="submit">Search</button>
+    <form class="js-form">
+      <input type="text" placeholder="Search images..." />
+      <button type="submit">Search</button>
     </form>
-    <span class="loader hide"></span>
-    <ul class="gallery" id="gallery"></ul>
-    <button class="load-more-btn hide" type="submit">Load more</button>
+
+    <ul class="gallery"></ul>
+
+    <div class="js-loader"></div>
+
+    <button class="js-load" hidden>Load more</button>
+
     <script type="module" src="./main.js"></script>
   </body>
 </html>

@@ -93,7 +93,8 @@
 .container-item {
   font-weight: 400;
 }
-.loader.hide {
+.loader.hide,
+.load-more-btn.hide {
   display: none;
 }
 .loader {
@@ -117,4 +118,22 @@
   100% {
     transform: rotate(360deg);
   }
+}
+.load-more-btn {
+  display: block;
+  margin: 0 auto;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #4e75ff;
+  color: #fff;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  border: none;
+}
+.load-more-btn:hover {
+  background: #6c8cff;
 }

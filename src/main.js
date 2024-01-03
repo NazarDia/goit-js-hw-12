@@ -22,14 +22,15 @@ const per_page = 40;
 let lightbox = new SimpleLightbox('.gallery a');
 
 async function getGaleryItems(page = currentPage) {
-  const data = await axios
-    .get(
+  try {
+    const response = await axios.get(
       `?key=${params.API_KEY}&q=${refs.input.value}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${per_page}`
-    )
-    .then(resp => resp.data)
-    .catch(err => console.error(err));
-  return data;
-  cl;
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 refs.searchBtn.addEventListener('click', onSearch);
@@ -52,6 +53,11 @@ function onSearch(e) {
       refs.gallery.innerHTML = createMarkup(data.hits);
       lightbox.refresh();
 
+      iziToast.info({
+        message: `Total Hits: ${data.totalHits}, Loaded Files: ${data.hits.length}`,
+        position: 'topRight',
+      });
+
       if (per_page >= data.totalHits) {
         refs.loadBtn.hidden = true;
       } else {
@@ -71,6 +77,11 @@ function onClick(e) {
   getGaleryItems(currentPage).then(data => {
     refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
     lightbox.refresh();
+
+    iziToast.info({
+      message: `Loaded Files: ${data.hits.length}`,
+      position: 'topRight',
+    });
 
     if (data.totalHits / per_page <= currentPage) {
       refs.loadBtn.hidden = true;

@@ -52,12 +52,12 @@ async function onSearch(e) {
     const data = await getGaleryItems();
     refs.gallery.innerHTML = createMarkup(data.hits);
     lightbox.refresh();
-
-    iziToast.info({
-      message: `Total Hits: ${data.totalHits}, Loaded Files: ${data.hits.length}`,
-      position: 'topRight',
-    });
-
+    if (data.hits.length > 0) {
+      iziToast.info({
+        message: `Total Hits: ${data.totalHits}, Loaded Files: ${data.hits.length}`,
+        position: 'topRight',
+      });
+    }
     refs.loadBtn.hidden = per_page >= data.totalHits;
   } catch (err) {
     console.error(err);

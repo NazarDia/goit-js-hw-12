@@ -36,7 +36,7 @@ async function getGaleryItems(page = currentPage) {
 refs.searchBtn.addEventListener('click', onSearch);
 refs.loadBtn.addEventListener('click', onClick);
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
   currentPage = 1;
 
@@ -48,33 +48,31 @@ function onSearch(e) {
   } else {
     refs.gallery.innerHTML = '<span class="loader"></span>';
   }
-  getGaleryItems()
-    .then(data => {
-      refs.gallery.innerHTML = createMarkup(data.hits);
-      lightbox.refresh();
+  try {
+    const data = await getGaleryItems();
+    refs.gallery.innerHTML = createMarkup(data.hits);
+    lightbox.refresh();
 
-      iziToast.info({
-        message: `Total Hits: ${data.totalHits}, Loaded Files: ${data.hits.length}`,
-        position: 'topRight',
-      });
+    iziToast.info({
+      message: `Total Hits: ${data.totalHits}, Loaded Files: ${data.hits.length}`,
+      position: 'topRight',
+    });
 
-      if (per_page >= data.totalHits) {
-        refs.loadBtn.hidden = true;
-      } else {
-        refs.loadBtn.hidden = false;
-      }
-    })
-    .catch(err => console.error(err));
+    refs.loadBtn.hidden = per_page >= data.totalHits;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
-function onClick(e) {
+async function onClick(e) {
   e.preventDefault();
   currentPage += 1;
 
   refs.loadDiv.innerHTML = '<span class="loader"></span>';
   refs.loadBtn.hidden = true;
 
-  getGaleryItems(currentPage).then(data => {
+  try {
+    const data = await getGaleryItems(currentPage);
     refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
     lightbox.refresh();
 
@@ -86,7 +84,7 @@ function onClick(e) {
     if (data.totalHits / per_page <= currentPage) {
       refs.loadBtn.hidden = true;
       refs.loadDiv.innerHTML = '';
-      return iziToast.info({
+      iziToast.info({
         message: "We're sorry, but you've reached the end of search results.",
         position: 'topRight',
       });
@@ -95,13 +93,15 @@ function onClick(e) {
       refs.loadBtn.hidden = false;
     }
 
-    const galeryItem = document.querySelector('.gallery-item');
-    let rect = galeryItem.getBoundingClientRect();
+    const galleryItem = document.querySelector('.gallery-item');
+    let rect = galleryItem.getBoundingClientRect();
     scrollBy({
       top: rect.height * 3,
       behavior: 'smooth',
     });
-  });
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function createMarkup(arr) {
